@@ -91,21 +91,61 @@ class MyLinkedList:
             current = next_node
         self.head = prev
 
-if __name__ == "__main__":
-    ll = MyLinkedList()
-    ll.append(1)
-    ll.append(2)
-    ll.append(3)
-    print("List:", ll)  # 1 -> 2 -> 3 -> None
+    def insert_at(self, index, value):
+        """ Inserts an item at a specific index in the linked list.
+            If the index is out of bounds, it does nothing. """
+        if index < 0 or index > self._size:
+            return
+        if index == 0:
+            self.prepend(value)
+            return
+        if index == self._size:
+            self.append(value)
+            return
+        new_node = Node(value)
+        current = self.head
+        for _ in range(index - 1):
+            current = current.next
+        new_node.next = current.next
+        current.next = new_node
+        self._size += 1
 
-    ll.prepend(0)
-    print("After prepend:", ll)  # 0 -> 1 -> 2 -> 3 -> None
+    def remove_at(self, index):
+        """ Removes an item at a specific index from the linked list.
+            If the index is out of bounds, it does nothing. """
+        if index < 0 or index >= self._size:
+            return
+        if index == 0:
+            self.delete(self.head.value)
+            return
+        current = self.head
+        for _ in range(index - 1):
+            current = current.next
+        current.next = current.next.next
+        if current.next is None:
+            self.tail = current
+        self._size -= 1
 
-    ll.delete(2)
-    print("2 is deleted:", ll)  # 0 -> 1 -> 3 -> None
+    def __str__(self):
+        """ Returns a string representation of the linked list. """
+        current = self.head
+        result = []
+        while current:
+            result.append(str(current.value))
+            current = current.next
+        return " -> ".join(result) + " -> None"
 
-    print("Where is 3?:", ll.find(3))  # 2
-    print("Size:", ll.size())  # 3
 
-    ll.reverse()
-    print("Reverted:", ll)  # 3 -> 1 -> 0 -> None
+my_linked_list = MyLinkedList()
+my_linked_list.append(1)
+my_linked_list.append(2)
+my_linked_list.append(3)
+print("List:", my_linked_list)  # 1 -> 2 -> 3 -> None
+my_linked_list.prepend(0)
+print("After prepend:", my_linked_list)  # 0 -> 1 -> 2 -> 3 -> None
+my_linked_list.delete(2)
+print("2 is deleted:", my_linked_list)  # 0 -> 1 -> 3 -> None
+print("Where is 3?:", my_linked_list.find(3))  # 2
+print("Size:", my_linked_list.size())  # 3
+my_linked_list.reverse()
+print("Reverted:", my_linked_list)  # 3 -> 1 -> 0 -> None
