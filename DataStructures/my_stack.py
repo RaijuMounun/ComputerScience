@@ -65,25 +65,25 @@ class MyStack:
 
 
 # Example usage:
-stack = MyStack()
-stack.push(5)
-stack.push(10)
-stack.push(3)
-stack.push(7)
-print(stack)  # Stack(top -> bottom): [7, 3, 10, 5]
-print("Peek:", stack.peek())  # 7
-print("Pop:", stack.pop())  # 7
-print("After Pop:", stack)  # Stack(top -> bottom): [3, 10, 5]
-print("Max:", stack.max())  # 10
-print("Min:", stack.min())  # 3
-stack.reverse()
-print("After Reverse:", stack)  # Stack(top -> bottom): [5, 10, 3]
+my_stack = MyStack()
+my_stack.push(5)
+my_stack.push(10)
+my_stack.push(3)
+my_stack.push(7)
+print(my_stack)  # Stack(top -> bottom): [7, 3, 10, 5]
+print("Peek:", my_stack.peek())  # 7
+print("Pop:", my_stack.pop())  # 7
+print("After Pop:", my_stack)  # Stack(top -> bottom): [3, 10, 5]
+print("Max:", my_stack.max())  # 10
+print("Min:", my_stack.min())  # 3
+my_stack.reverse()
+print("After Reverse:", my_stack)  # Stack(top -> bottom): [5, 10, 3]
 print("For Loop:")
-for item in stack:
+for item in my_stack:
     print(item, end=" ")  # 5 10 3
-print("\nStack Size:", stack.size())      # 3
-print("Is Empty:", stack.is_empty())      # False
-stack.pop()
-stack.pop()
-stack.pop()
-print("Empty After All Pops:", stack.is_empty())  # True
+print("\nStack Size:", my_stack.size())      # 3
+print("Is Empty:", my_stack.is_empty())      # False
+my_stack.pop()
+my_stack.pop()
+my_stack.pop()
+print("Empty After All Pops:", my_stack.is_empty())  # True
