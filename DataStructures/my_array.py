@@ -3,7 +3,7 @@ import ctypes
 
 class MyArray:
     """ A low-level array implementation using ctypes."""
-    def __init__(self, capacity):
+    def __init__(self, capacity=2):
         self.capacity = capacity
         self.length = 0
         self.data = self._make_array(capacity)
@@ -99,23 +99,22 @@ class MyArray:
         return "[" + ", ".join(str(self.data[i]) for i in range(self.length)) + "]"
 
 
-
 # Example usage:
 if __name__ == "__main__":
-    arr = MyArray(5)
-    arr.append(1)
-    arr.append(2)
-    arr.append(3)
-    arr.append(4)
-    arr.append(5)
-    print(arr)  # Output: [1, 2, 3, 4, 5]
-    arr.insert(2, 10)
-    print(arr)  # Output: [1, 2, 10, 3, 4, 5]
-    arr.delete(3)
-    print(arr)  # Output: [1, 2, 10, 4, 5]
-    print(arr.pop())  # Output: 5
-    print(arr)  # Output: [1, 2, 10, 4]
-    print(arr.find(10))  # Output: 2
-    print(arr.contains(3))  # Output: False
-    arr.clear()
-    print(arr)  # Output: []
+    my_array = MyArray(5)
+    my_array.append(1)
+    my_array.append(2)
+    my_array.append(3)
+    my_array.append(4)
+    my_array.append(5)
+    print(my_array)  # Output: [1, 2, 3, 4, 5]
+    my_array.insert(2, 10)
+    print(my_array)  # Output: [1, 2, 10, 3, 4, 5]
+    my_array.delete(3)
+    print(my_array)  # Output: [1, 2, 10, 4, 5]
+    print(my_array.pop())  # Output: 5
+    print(my_array)  # Output: [1, 2, 10, 4]
+    print(my_array.find(10))  # Output: 2
+    print(my_array.contains(3))  # Output: False
+    my_array.clear()
+    print(my_array)  # Output: []
