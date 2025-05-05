@@ -68,20 +68,20 @@ class MyQueue:
             str(self.queue_array[i]) for i in range(self.front_index, self.queue_array.length)) + "]"
 
 
-queue = MyQueue()
-queue.enqueue(4)
-queue.enqueue(1)
-queue.enqueue(9)
-queue.enqueue(2)
+my_queue = MyQueue()
+my_queue.enqueue(4)
+my_queue.enqueue(1)
+my_queue.enqueue(9)
+my_queue.enqueue(2)
 
-print(queue)  # Output (front -> back): [4, 1, 9, 2]
-print("Peek:", queue.peek())  # 4
-print("Max:", queue.max())    # 9
-print("Min:", queue.min())    # 1
+print(my_queue)  # Output (front -> back): [4, 1, 9, 2]
+print("Peek:", my_queue.peek())  # 4
+print("Max:", my_queue.max())    # 9
+print("Min:", my_queue.min())    # 1
 
-queue.reverse()
-print("Reversed:", queue)  # Queue(front -> back): [2, 9, 1, 4]
+my_queue.reverse()
+print("Reversed:", my_queue)  # Queue(front -> back): [2, 9, 1, 4]
 
 print("For loop:")
-for item in queue:
+for item in my_queue:
     print(item, end=" ")  # 2 9 1 4
