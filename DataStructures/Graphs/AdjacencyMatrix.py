@@ -19,7 +19,7 @@ Example:
     5.0
 """
 
-from typing import Dict, List, Set, Any, Optional, Deque, Tuple
+from typing import Dict, List, Any, Deque, Tuple
 from collections import deque
 import numpy as np
 
