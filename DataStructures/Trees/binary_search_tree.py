@@ -1,139 +1,260 @@
-'''
-Binary Search Tree (BST) implementation with common operations like insert, delete,
-search, and traversal. Extends a TreeNode structure.
-'''
+"""A binary search tree implementation with search optimization.
 
-class TreeNode:
-    """
-    Represents a node in a binary tree.
+This module implements a binary search tree (BST) that maintains the following properties:
+- For any node, all values in its left subtree are less than the node's value
+- For any node, all values in its right subtree are greater than the node's value
+- No duplicate values are allowed
+- O(log n) average case time complexity for search operations
 
+Example:
+    >>> tree = BinarySearchTree()
+    >>> tree.insert(5)
+    >>> tree.insert(3)
+    >>> tree.insert(7)
+    >>> print(tree.traverse_inorder())
+    [3, 5, 7]
+    >>> print(tree.search(3))
+    True
+    >>> print(tree.search(4))
+    False
+"""
+
+from typing import Optional, Any, List
+from my_binary_tree import MyBinaryTree, TreeNode, TreeError, EmptyTreeError
+
+
+class DuplicateValueError(TreeError):
+    """Raised when attempting to insert a duplicate value into the tree."""
+    pass
+
+
+class BinarySearchTree(MyBinaryTree):
+    """A binary search tree implementation with optimized search operations.
+    
+    This class extends MyBinaryTree to provide a binary search tree implementation
+    that maintains the BST property: for any node, all values in its left subtree
+    are less than the node's value, and all values in its right subtree are
+    greater than the node's value.
+    
+    The tree provides:
+    - O(log n) average case time complexity for search operations
+    - Efficient insertion and deletion while maintaining BST properties
+    - No duplicate values allowed
+    - Inorder traversal yields sorted values
+    
     Attributes:
-        value (any): The data value of the node.
-        left (TreeNode): The left child node.
-        right (TreeNode): The right child node.
+        root: The root node of the tree
     """
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
-
-
-class BinarySearchTree:
-    """
-    Binary Search Tree class that supports insert, delete, search, traversals,
-    find_min, find_max, and other utility functions.
-    """
-
-    def __init__(self):
-        """Initialize an empty BST."""
-        self.root = None
-
-    def insert(self, value):
-        """Insert value into the BST."""
-        self.root = self._insert(self.root, value)
-
-    def _insert(self, node, value):
-        if not node:
-            return TreeNode(value)
-        if value < node.value:
-            node.left = self._insert(node.left, value)
-        elif value > node.value:
-            node.right = self._insert(node.right, value)
-        return node
-
-    def search(self, value):
-        """Search for a value in the BST."""
-        return self._search(self.root, value)
-
-    def _search(self, node, value):
-        if not node or node.value == value:
-            return node
-        if value < node.value:
-            return self._search(node.left, value)
-        return self._search(node.right, value)
-
-    def delete(self, value):
-        """Delete a value from the BST."""
-        self.root = self._delete(self.root, value)
-
-    def _delete(self, node, value):
-        if not node:
-            return None
-        if value < node.value:
-            node.left = self._delete(node.left, value)
-        elif value > node.value:
-            node.right = self._delete(node.right, value)
+    
+    def __init__(self) -> None:
+        """Initialize an empty binary search tree."""
+        super().__init__()
+    
+    def insert(self, value: Any) -> None:
+        """Insert a value into the binary search tree.
+        
+        This method overrides the base class's insert method to ensure
+        the BST property is maintained and no duplicates are allowed.
+        
+        Args:
+            value: The value to insert
+            
+        Raises:
+            ValueError: If the value is None
+            DuplicateValueError: If the value already exists in the tree
+        """
+        if value is None:
+            raise ValueError("Cannot insert None value into tree")
+        
+        if not self.root:
+            self.root = TreeNode(value)
         else:
+            self._insert_recursive(self.root, value)
+    
+    def _insert_recursive(self, node: TreeNode, value: Any) -> None:
+        """Recursively insert a value while maintaining BST properties.
+        
+        Args:
+            node: The current node being processed
+            value: The value to insert
+            
+        Raises:
+            DuplicateValueError: If the value already exists in the tree
+        """
+        if value == node.value:
+            raise DuplicateValueError(f"Value {value} already exists in the tree")
+        
+        if value < node.value:
+            if node.left:
+                self._insert_recursive(node.left, value)
+            else:
+                node.left = TreeNode(value)
+        else:
+            if node.right:
+                self._insert_recursive(node.right, value)
+            else:
+                node.right = TreeNode(value)
+    
+    def search(self, value: Any) -> bool:
+        """Search for a value in the tree.
+        
+        This method provides an optimized search operation that takes
+        advantage of the BST property to achieve O(log n) average case
+        time complexity.
+        
+        Args:
+            value: The value to search for
+            
+        Returns:
+            True if the value is found, False otherwise
+        """
+        return self._search_recursive(self.root, value)
+    
+    def _search_recursive(self, node: Optional[TreeNode], value: Any) -> bool:
+        """Recursively search for a value in the tree.
+        
+        Args:
+            node: The current node being processed
+            value: The value to search for
+            
+        Returns:
+            True if the value is found, False otherwise
+        """
+        if not node:
+            return False
+        
+        if value == node.value:
+            return True
+        
+        if value < node.value:
+            return self._search_recursive(node.left, value)
+        return self._search_recursive(node.right, value)
+    
+    def delete(self, value: Any) -> None:
+        """Delete a value from the tree while maintaining BST properties.
+        
+        This method overrides the base class's delete method to ensure
+        the BST property is maintained after deletion.
+        
+        Args:
+            value: The value to delete
+            
+        Raises:
+            EmptyTreeError: If the tree is empty
+        """
+        if not self.root:
+            raise EmptyTreeError("Cannot delete from empty tree")
+        
+        self.root = self._delete_recursive(self.root, value)
+    
+    def _delete_recursive(self, node: Optional[TreeNode], value: Any) -> Optional[TreeNode]:
+        """Recursively delete a value while maintaining BST properties.
+        
+        Args:
+            node: The current node being processed
+            value: The value to delete
+            
+        Returns:
+            The root of the subtree after deletion
+        """
+        if not node:
+            return node
+        
+        if value < node.value:
+            node.left = self._delete_recursive(node.left, value)
+        elif value > node.value:
+            node.right = self._delete_recursive(node.right, value)
+        else:
+            # Node with only one child or no child
             if not node.left:
                 return node.right
-            if not node.right:
+            elif not node.right:
                 return node.left
-            min_larger_node = self._find_min(node.right)
-            node.value = min_larger_node.value
-            node.right = self._delete(node.right, min_larger_node.value)
+            
+            # Node with two children: Get the inorder successor
+            temp = node.right
+            while temp.left:
+                temp = temp.left
+            
+            # Copy the inorder successor's content to this node
+            node.value = temp.value
+            
+            # Delete the inorder successor
+            node.right = self._delete_recursive(node.right, temp.value)
+        
         return node
-
-    def _find_min(self, node):
-        while node.left:
-            node = node.left
-        return node
-
-    def _find_max(self, node):
-        while node.right:
-            node = node.right
-        return node
-
-    def inorder(self):
-        """Return inorder traversal of the BST."""
-        return self._inorder(self.root)
-
-    def _inorder(self, node):
-        if not node:
-            return []
-        return self._inorder(node.left) + [node.value] + self._inorder(node.right)
-
-    def preorder(self):
-        """Return preorder traversal of the BST."""
-        return self._preorder(self.root)
-
-    def _preorder(self, node):
-        if not node:
-            return []
-        return [node.value] + self._preorder(node.left) + self._preorder(node.right)
-
-    def postorder(self):
-        """Return postorder traversal of the BST."""
-        return self._postorder(self.root)
-
-    def _postorder(self, node):
-        if not node:
-            return []
-        return self._postorder(node.left) + self._postorder(node.right) + [node.value]
-
-    def find_min(self):
-        """Return the minimum value in the BST."""
-        if not self.root:
-            raise ValueError("Tree is empty")
-        return self._find_min(self.root).value
-
-    def find_max(self):
-        """Return the maximum value in the BST."""
-        if not self.root:
-            raise ValueError("Tree is empty")
-        return self._find_max(self.root).value
+    
+    def get_sorted_values(self) -> List[Any]:
+        """Return a list of all values in the tree in sorted order.
+        
+        This method takes advantage of the BST property that inorder
+        traversal yields sorted values.
+        
+        Returns:
+            A list of all values in the tree, sorted in ascending order
+        """
+        return self.traverse_inorder()
 
 
-# Example usage
 if __name__ == "__main__":
-    my_binary_search_tree = BinarySearchTree()
-    for val in [50, 30, 70, 20, 40, 60, 80]:
-        my_binary_search_tree.insert(val)
-
-    print("Inorder:", my_binary_search_tree.inorder())
-    print("Preorder:", my_binary_search_tree.preorder())
-    print("Postorder:", my_binary_search_tree.postorder())
-    print("Min:", my_binary_search_tree.find_min())
-    print("Max:", my_binary_search_tree.find_max())
-
-    my_binary_search_tree.delete(70)
-    print("Inorder after deleting 70:", my_binary_search_tree.inorder())
+    # Test the binary search tree
+    tree = BinarySearchTree()
+    
+    # Test insertion
+    print("Testing insertion:")
+    test_values = [10, 20, 30, 40, 50, 25]
+    for val in test_values:
+        tree.insert(val)
+        print(f"\nAfter inserting {val}:")
+        print("Inorder:", tree.traverse_inorder())
+        print("Height:", tree.height())
+        print("Is balanced?", tree.is_balanced())
+    
+    # Test search
+    print("\nTesting search:")
+    search_values = [20, 25, 35]
+    for val in search_values:
+        print(f"Searching for {val}:", tree.search(val))
+    
+    # Test deletion
+    print("\nTesting deletion:")
+    values_to_delete = [20, 30]
+    for val in values_to_delete:
+        tree.delete(val)
+        print(f"\nAfter deleting {val}:")
+        print("Inorder:", tree.traverse_inorder())
+        print("Height:", tree.height())
+        print("Is balanced?", tree.is_balanced())
+    
+    # Test error handling
+    print("\nTesting error handling:")
+    empty_tree = BinarySearchTree()
+    try:
+        empty_tree.delete(5)
+    except EmptyTreeError as e:
+        print("Caught EmptyTreeError:", e)
+    
+    try:
+        tree.insert(None)
+    except ValueError as e:
+        print("Caught ValueError:", e)
+    
+    try:
+        tree.insert(10)  # Try to insert a duplicate value
+    except DuplicateValueError as e:
+        print("Caught DuplicateValueError:", e)
+    
+    # Test with a large number of values
+    print("\nTesting with a large number of values:")
+    large_tree = BinarySearchTree()
+    for i in range(100):
+        large_tree.insert(i)
+    
+    print("Height:", large_tree.height())
+    print("Is balanced?", large_tree.is_balanced())
+    print("Total nodes:", large_tree.count_nodes())
+    print("Leaf nodes:", large_tree.count_leaves())
+    
+    # Test sorted values
+    print("\nTesting sorted values:")
+    print("Sorted values:", large_tree.get_sorted_values())
